@@ -8,6 +8,7 @@
 import { lex } from "../grammar/lexer.ts";
 import { parse, type ParseError } from "../grammar/parser.ts";
 import { staticChecks } from "../grammar/checks.ts";
+import { VocabResolver, type ResolvedTissue } from "../registry/vocab.ts";
 import type { Target, Signatures, Residence, Intent } from "../ir/types.ts";
 import type { Fact } from "../ir/grade.ts";
 import type { Grade } from "../ir/grade.ts";
@@ -16,10 +17,12 @@ export interface ResolveResult {
   target: Target;
   intent: Intent;
   facts: Fact[];
+  resolvedTissues: ResolvedTissue[];
+  vocabVersions: Record<string, string>;
   errors: ParseError[];
 }
 
-export function resolve(source: string): ResolveResult | { errors: ParseError[] } {
+export function resolve(source: string, vocabDir?: string): ResolveResult | { errors: ParseError[] } {
   const { tokens, errors: lexErrors } = lex(source);
   if (lexErrors.length > 0) {
     return {
@@ -49,6 +52,25 @@ export function resolve(source: string): ResolveResult | { errors: ParseError[] 
   // For v0 we handle the first (and only) target
   const pt = program.targets[0]!;
 
+  // Resolve tissue vocabulary
+  const vocab = new VocabResolver(vocabDir);
+  let resolvedTissues: ResolvedTissue[] = [];
+
+  if (pt.residence && pt.residence.tissues.length > 0) {
+    const { resolved, errors: vocabErrors } = vocab.resolveAll(pt.residence.tissues);
+    if (vocabErrors.length > 0) {
+      return {
+        errors: vocabErrors.map((e) => ({
+          code: e.code,
+          line: pt.line,
+          col: pt.col,
+          message: `${e.message}; nearest: ${e.nearestMatches.slice(0, 3).join(", ")}`,
+        })),
+      };
+    }
+    resolvedTissues = resolved;
+  }
+
   const target: Target = {
     name: pt.name,
     organism: pt.organism!,
@@ -64,7 +86,7 @@ export function resolve(source: string): ResolveResult | { errors: ParseError[] 
     facts.push({
       id: `f_res`,
       claim: "residence_exhaustive",
-      subject: { tissues: target.residence.tissues },
+      subject: { tissues: target.residence.tissues, resolved: resolvedTissues.map((r) => r.id) },
       value: target.residence.exhaustive,
       grade: target.residence.grade,
       from: [],
@@ -75,6 +97,8 @@ export function resolve(source: string): ResolveResult | { errors: ParseError[] 
     target,
     intent: program.statement,
     facts,
+    resolvedTissues,
+    vocabVersions: vocab.vocabVersions(),
     errors: [],
   };
 }

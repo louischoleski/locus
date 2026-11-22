@@ -1,0 +1,28 @@
+{
+  "$comment": "Subset of Uberon anatomical terms relevant to gene therapy targets. Version uberon-2026-09. Source: OBO Foundry https://obofoundry.org/ontology/uberon.html",
+  "version": "uberon-2026-09",
+  "source": "UBERON",
+  "terms": {
+    "liver": { "id": "UBERON:0002107", "name": "liver", "parents": [] },
+    "brain": { "id": "UBERON:0000955", "name": "brain", "parents": [] },
+    "cerebral.cortex": { "id": "UBERON:0000956", "name": "cerebral cortex", "parents": ["UBERON:0000955"] },
+    "hippocampus": { "id": "UBERON:0002421", "name": "hippocampus", "parents": ["UBERON:0000955"] },
+    "cerebellum": { "id": "UBERON:0002037", "name": "cerebellum", "parents": ["UBERON:0000955"] },
+    "spinal.cord": { "id": "UBERON:0002240", "name": "spinal cord", "parents": [] },
+    "dorsal.root.ganglion": { "id": "UBERON:0000044", "name": "dorsal root ganglion", "parents": [] },
+    "trigeminal.ganglion": { "id": "UBERON:0001675", "name": "trigeminal ganglion", "parents": [] },
+    "retina": { "id": "UBERON:0000966", "name": "retina", "parents": [] },
+    "cochlea": { "id": "UBERON:0001844", "name": "cochlea", "parents": [] },
+    "heart": { "id": "UBERON:0000948", "name": "heart", "parents": [] },
+    "skeletal.muscle": { "id": "UBERON:0001134", "name": "skeletal muscle tissue", "parents": [] },
+    "lung": { "id": "UBERON:0002048", "name": "lung", "parents": [] },
+    "kidney": { "id": "UBERON:0002113", "name": "kidney", "parents": [] },
+    "pancreas": { "id": "UBERON:0001264", "name": "pancreas", "parents": [] },
+    "bone.marrow": { "id": "UBERON:0002371", "name": "bone marrow", "parents": [] },
+    "thymus": { "id": "UBERON:0002370", "name": "thymus", "parents": [] },
+    "spleen": { "id": "UBERON:0002106", "name": "spleen", "parents": [] },
+    "lymph.node": { "id": "UBERON:0000029", "name": "lymph node", "parents": [] },
+    "skin": { "id": "UBERON:0002097", "name": "skin of body", "parents": [] },
+    "blood": { "id": "UBERON:0000178", "name": "blood", "parents": [] }
+  }
+}

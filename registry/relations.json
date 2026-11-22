@@ -1,0 +1,21 @@
+{
+  "$comment": "Organism relations table. Each row is an ordered pair (fact_organism, target_organism) → axis O value. Pairs absent from this table resolve to 'distant'. Each row is itself graded.",
+  "relations": [
+    { "from": "mouse",    "to": "human",    "o": "related", "grade": { "m": "measured", "o": null }, "note": "Mus musculus — standard model for human gene therapy preclinical" },
+    { "from": "human",    "to": "mouse",    "o": "related", "grade": { "m": "measured", "o": null }, "note": "reverse of the above" },
+    { "from": "rat",      "to": "human",    "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "human",    "to": "rat",      "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "rat",      "to": "mouse",    "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "mouse",    "to": "rat",      "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "nhp",      "to": "human",    "o": "related", "grade": { "m": "measured", "o": null }, "note": "non-human primate" },
+    { "from": "human",    "to": "nhp",      "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "macaque",  "to": "human",    "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "human",    "to": "macaque",  "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "pig",      "to": "human",    "o": "related", "grade": { "m": "measured", "o": null }, "note": "porcine models for cardiac/liver gene therapy" },
+    { "from": "human",    "to": "pig",      "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "dog",      "to": "human",    "o": "related", "grade": { "m": "measured", "o": null }, "note": "canine models for DMD, hemophilia" },
+    { "from": "human",    "to": "dog",      "o": "related", "grade": { "m": "measured", "o": null } },
+    { "from": "zebrafish", "to": "human",   "o": "distant", "grade": { "m": "measured", "o": null }, "note": "useful for screening, but distant" },
+    { "from": "human",    "to": "zebrafish", "o": "distant", "grade": { "m": "measured", "o": null } }
+  ]
+}

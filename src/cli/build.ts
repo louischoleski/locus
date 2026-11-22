@@ -8,6 +8,7 @@ import { resolve } from "../passes/resolve.ts";
 import { scanSite, readFasta } from "../passes/scan.ts";
 import { judge } from "../passes/judge.ts";
 import { writeManifest } from "../passes/manifest.ts";
+import { resolveOrganismAxis } from "../registry/organism.ts";
 import { effectiveGrade, type Fact, type Grade } from "../ir/grade.ts";
 import type { IR, OutcomeDistribution, Lock } from "../ir/types.ts";
 import { EXCISE_OUTCOMES } from "../ir/types.ts";
@@ -33,7 +34,17 @@ export function build(opts: BuildOptions): BuildResult {
     return { exitCode: 2, errors: resolved.errors };
   }
 
-  const { target, intent, facts } = resolved;
+  const { target, intent, facts, vocabVersions } = resolved;
+
+  // Resolve organism axis on all facts from pass 1
+  for (const fact of facts) {
+    if (fact.grade.o !== "n/a" && fact.grade.o !== "unknown") {
+      fact.grade = {
+        ...fact.grade,
+        o: resolveOrganismAxis(fact.grade.o, target.organism),
+      };
+    }
+  }
 
   // Pass 2: scan
   const { sequence: genome, hash: genomeHash } = readFasta(opts.genomePath);
@@ -103,6 +114,11 @@ export function build(opts: BuildOptions): BuildResult {
 
   const lock: Lock = {
     [corpusName]: genomeHash,
+    ...Object.fromEntries(
+      Object.entries(vocabVersions).map(([source, version]) => [
+        `vocab:${source}`, version,
+      ]),
+    ),
   };
 
   const manifest = writeManifest(target, allFacts, assertions, outcome, lock, target.tolerance, nearMatches);

@@ -12,8 +12,11 @@
 import { readFileSync } from "node:fs";
 import { resolve as resolvePath } from "node:path";
 import { build } from "./build.ts";
+import { diffCorpus } from "./diff.ts";
+import { runTests } from "./test-runner.ts";
 import { resolve } from "../passes/resolve.ts";
 import { validateHeaderFile } from "../registry/validate.ts";
+import { refusalDiagnostics, diagnosticsToJson, type Diagnostic } from "./diagnostics.ts";
 import { effectiveGrade, type Fact } from "../ir/grade.ts";
 
 const args = process.argv.slice(2);
@@ -23,6 +26,8 @@ function usage(): never {
   console.error(`Usage:
   locus build <file> --genome <fasta> [--genome-name <name>] [--json]
   locus check <file>
+  locus test <fixtures-dir> --genome <fasta> [--genome-name <name>]
+  locus diff <fixtures-dir> --genome-a <fasta> --genome-b <fasta> [--name-a <n>] [--name-b <n>]
   locus why <assertion> --ir <ir.json>
   locus registry validate <path>
 `);
@@ -49,15 +54,30 @@ switch (command) {
       json: args.includes("--json"),
     });
 
+    const isJson = args.includes("--json");
+
     if (result.errors && result.errors.length > 0) {
-      for (const e of result.errors) {
-        const loc = e.line ? `:${e.line}:${e.col}` : "";
-        console.error(`${e.code}  ${file}${loc}  ${e.message}`);
+      const diags: Diagnostic[] = result.errors.map((e) => ({
+        code: e.code,
+        file,
+        line: e.line,
+        col: e.col,
+        message: e.message,
+      }));
+      if (isJson) {
+        console.error(diagnosticsToJson(diags));
+      } else {
+        for (const e of result.errors) {
+          const loc = e.line ? `:${e.line}:${e.col}` : "";
+          console.error(`${e.code}  ${file}${loc}  ${e.message}`);
+        }
       }
     }
 
-    if (args.includes("--json") && result.ir) {
-      console.log(JSON.stringify(result.ir, null, 2));
+    if (isJson && result.ir) {
+      // Append refusal diagnostics to the IR output
+      const refusals = refusalDiagnostics(result.ir.assertions, file);
+      console.log(JSON.stringify({ ...result.ir, diagnostics: refusals }, null, 2));
     } else if (result.manifest) {
       console.log(result.manifest);
     }
@@ -128,6 +148,54 @@ switch (command) {
     }
 
     process.exit(a.status === "refused" ? 1 : 0);
+    break;
+  }
+
+  case "test": {
+    const testDir = args[1];
+    const testGenome = flagValue("--genome");
+    if (!testDir || !testGenome) usage();
+
+    const testResult = runTests(
+      resolvePath(testDir),
+      resolvePath(testGenome),
+      flagValue("--genome-name"),
+    );
+
+    for (const r of testResult.results) {
+      const icon = r.passed ? "✓" : "✗";
+      const kind = `[${r.kind}]`;
+      console.log(`  ${icon} ${kind.padEnd(16)} ${r.fixture}  ${r.message}`);
+    }
+
+    console.log("");
+    console.log(`${testResult.passed}/${testResult.total} passed`);
+    if (testResult.blocksBuild) console.log("BLOCKS BUILD: unit test failure");
+    if (testResult.blocksRelease && !testResult.blocksBuild) console.log("BLOCKS RELEASE: fixture failure");
+
+    process.exit(testResult.exitCode);
+    break;
+  }
+
+  case "diff": {
+    const fixtureDir = args[1];
+    const genomeA = flagValue("--genome-a");
+    const genomeB = flagValue("--genome-b");
+    if (!fixtureDir || !genomeA || !genomeB) usage();
+
+    const result = diffCorpus(
+      resolvePath(fixtureDir),
+      resolvePath(genomeA),
+      resolvePath(genomeB),
+      flagValue("--name-a"),
+      flagValue("--name-b"),
+    );
+
+    console.log(result.summary);
+    if (args.includes("--json")) {
+      console.log(JSON.stringify(result.changes, null, 2));
+    }
+    process.exit(result.needsReviewer ? 1 : 0);
     break;
   }
 
