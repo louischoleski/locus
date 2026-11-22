@@ -1,53 +1,153 @@
-# Convergence examples
+# Examples
 
-Three real gene therapy cases with known published outcomes, run through Locus to test whether the system's conclusions converge with or diverge from reality.
+Four cases demonstrating what Locus does: three real gene therapies with known outcomes, and one hypothetical case showing what full elimination requires.
 
-## Results
+Run any example:
 
-All three cases run against the synthetic corpus genome at tolerance 0.
+```
+locus build examples/hsv2_jerome_2021.locus --genome fixtures/corpus/corpus_genome.fa
+locus audit examples/hsv2_jerome_2021.locus --genome fixtures/corpus/corpus_genome.fa
+locus why eliminates_reservoir examples/hsv2_jerome_2021.locus --genome fixtures/corpus/corpus_genome.fa
+```
 
-### Case 1: HSV-2 latent reservoir excision (Jerome lab)
+## Case 1: HSV-2 latent reservoir excision (Jerome lab)
 
-**Published reality:** Aubert et al. 2024 (doi:10.1038/s41467-024-45030-1) achieved 90-97% reduction in latent HSV DNA in mouse sacral ganglia using AAV-delivered meganucleases. Complete elimination was **not** achieved. Some animals showed undetectable viral DNA, most did not.
+**Source:** Aubert et al. 2024 (doi:10.1038/s41467-024-45030-1)
 
-**Locus says:** `eliminates_reservoir` **REFUSED** for three reasons:
-1. Residence grade `(asserted, same)` does not meet the floor `(measured, same)` — the claim that HSV resides only in sacral sensory neurons is an assertion, not a measurement
-2. Residence not exhaustive (`only` absent) — HSV latency may extend beyond sacral DRG
-3. Excise outcome distribution unknown
+**Published reality:** AAV-delivered meganucleases targeting HSV in mouse sacral DRG. 90-97% reduction in latent HSV DNA. Complete elimination **not** achieved.
 
-**Convergence: YES.** The system refuses the claim that matters, and the reasons map to real gaps in the published evidence. The residence concern is particularly apt — HSV latency sites beyond the DRG remain debated.
+**Locus says:** `eliminates_reservoir` **REFUSED**
+- Residence grade `(asserted, same)` does not meet floor `(measured, same)`
+- Residence not exhaustive (`only` absent)
+- Excise outcome distribution unknown
 
-### Case 2: Casgevy / BCL11A enhancer (Vertex/CRISPR Therapeutics)
+**Convergence: YES.** The residence concern is particularly apt — HSV latency sites beyond the DRG remain debated.
 
-**Published reality:** Frangoul et al. 2021 (doi:10.1056/NEJMoa2031054). FDA-approved Dec 2023. CRISPR disruption of the BCL11A erythroid enhancer reactivates fetal hemoglobin. Sustained HbF >40%, transfusion independence in most patients. This is **not** a reservoir elimination — it's enhancer disruption.
+```
+locus build examples/hsv2_jerome_2021.locus --genome fixtures/corpus/corpus_genome.fa
+```
 
-**Locus says:** `eliminates_reservoir` **REFUSED** for two reasons:
-1. Residence not exhaustive (`only` absent)
-2. Excise outcome distribution unknown
+## Case 2: Casgevy / BCL11A enhancer (Vertex/CRISPR Therapeutics)
 
-Note: the residence fact *does* meet the floor `(measured, same)` because the design declares `@measured(human)` — the therapeutic editing of HSCs is well-characterized. But the other two conditions are not met.
+**Source:** Frangoul et al. 2021 (doi:10.1056/NEJMoa2031054). FDA-approved Dec 2023.
 
-**Convergence: YES.** The system correctly refuses reservoir elimination for a therapy that is not, in fact, eliminating a reservoir. The `only` check is structurally correct — Casgevy does not claim to reach all copies of BCL11A, only those in edited HSCs that engraft.
+**Published reality:** CRISPR disruption of the BCL11A erythroid enhancer reactivates fetal hemoglobin. Transfusion independence in most patients. This is enhancer disruption, **not** reservoir elimination.
 
-### Case 3: HBV cccDNA excision (Stone et al.)
+**Locus says:** `eliminates_reservoir` **REFUSED**
+- Residence not exhaustive (`only` absent)
+- Excise outcome distribution unknown
 
-**Published reality:** Stone et al. 2021. AAV-delivered CRISPR targeting HBV cccDNA in mouse models. Significant reduction in cccDNA and HBsAg, but complete cccDNA elimination **not** achieved. Additionally, HBV DNA has been detected in PBMCs and other extrahepatic sites, challenging the hepatocyte-only residence assumption.
+**Convergence: YES.** The system correctly refuses reservoir elimination for a therapy that isn't trying to eliminate a reservoir.
 
-**Locus says:** `eliminates_reservoir` **REFUSED** for three reasons:
-1. Residence grade `(asserted, same)` does not meet floor — the hepatocyte-only claim is ungraded
-2. Residence not exhaustive (`only` absent)
-3. Excise outcome distribution unknown
+```
+locus build examples/casgevy_bcl11a.locus --genome fixtures/corpus/corpus_genome.fa
+```
 
-**Convergence: YES.** The system catches exactly the gap that matters: the residence assumption (hepatocyte-only) is asserted, not measured, and it's not marked exhaustive. This matches the real uncertainty — extrahepatic HBV reservoirs remain an open question.
+## Case 3: HBV cccDNA excision (Stone et al.)
+
+**Source:** Stone et al. 2021. AAV-delivered CRISPR targeting HBV cccDNA in mouse models.
+
+**Published reality:** Significant reduction in cccDNA and HBsAg, but complete elimination **not** achieved. HBV DNA detected in PBMCs and extrahepatic sites.
+
+**Locus says:** `eliminates_reservoir` **REFUSED**
+- Residence grade `(asserted, same)` does not meet floor
+- Residence not exhaustive (`only` absent)
+- Excise outcome distribution unknown
+
+**Convergence: YES.** The hepatocyte-only assumption is flagged as ungraded — matching the real debate about extrahepatic HBV reservoirs.
+
+```
+locus build examples/hbv_excision.locus --genome fixtures/corpus/corpus_genome.fa
+```
+
+## Case 4: Hypothetical full elimination
+
+**What it takes for `eliminates_reservoir` to be ALLOWED:**
+
+1. Guide sequence unique in the reference genome (0 occurrences)
+2. Residence declared exhaustive (`only`) with grade `(measured, same)`
+3. Outcome distribution measured (provided via `--facts`)
+4. Supporting fact for elimination at grade `(measured, same)`
+
+Without external facts (outcome distribution unknown):
+
+```
+$ locus build examples/full_elimination.locus --genome fixtures/corpus/corpus_genome.fa
+
+eliminates_reservoir   REFUSED
+  excise outcome distribution unknown
+```
+
+With measured evidence provided:
+
+```
+$ locus build examples/full_elimination.locus \
+    --genome fixtures/corpus/corpus_genome.fa \
+    --facts examples/full_elimination_facts.json
+
+eliminates_reservoir   ALLOWED   f_res, f_ext_elimination meets (measured, same)
+```
+
+The only difference between refusal and allowance is measured evidence. The system won't invent it.
+
+## Auditing a design
+
+`locus audit` shows what you don't know and what it could cost:
+
+```
+$ locus audit examples/hsv2_jerome_2021.locus --genome fixtures/corpus/corpus_genome.fa
+
+EVIDENCE PROFILE
+  3 fact(s) in the build
+  Method axis:  computed 2, asserted 1
+  Weakest fact: f_res at (asserted, same)
+
+ASSERTION COMPLETENESS
+  1/4 assertions allowed (25%)
+  3 refused, 5 missing condition(s) total
+
+OPEN QUESTIONS
+  OQ-01  What is the outcome distribution for this excision?
+  OQ-02  Does the reference genome accurately represent the host?
+  OQ-03  Are there off-target cut sites?
+  OQ-04  Is the target confined to neuron.sensory.sacral?
+  OQ-05  Are the asserted facts correct?
+  OQ-06  What happens at higher mismatch tolerances?
+
+RISK SURFACE
+  HIGH: eliminates_reservoir [REFUSED] — 3 missing conditions
+  MEDIUM: signature_unique_in_reference [ALLOWED] — could flip on genome update
+```
+
+Compare with the full elimination case:
+
+```
+$ locus audit examples/full_elimination.locus \
+    --genome fixtures/corpus/corpus_genome.fa \
+    --facts examples/full_elimination_facts.json
+
+ASSERTION COMPLETENESS
+  3/4 assertions allowed (75%)
+
+OPEN QUESTIONS
+  OQ-02  Does the reference genome accurately represent the host?
+  OQ-03  Are there off-target cut sites?
+  OQ-06  What happens at higher mismatch tolerances?
+
+RISK SURFACE
+  HIGH: eliminates_reservoir [ALLOWED] — could flip if outcome distribution
+        changes with a different effector, cell type, or delivery route
+```
+
+Even when allowed, the audit tells you what could still go wrong.
 
 ## Summary
 
-| Case | Known outcome | Locus conclusion | Converges? |
-|------|--------------|------------------|------------|
+| Case | Known outcome | Locus | Converges? |
+|------|--------------|-------|------------|
 | HSV-2 (Jerome) | ~90% reduction, not eliminated | REFUSED (3 reasons) | Yes |
-| Casgevy (BCL11A) | Works, but not reservoir elimination | REFUSED (2 reasons) | Yes |
+| Casgevy (BCL11A) | Works, not reservoir elimination | REFUSED (2 reasons) | Yes |
 | HBV cccDNA (Stone) | Reduced, not eliminated | REFUSED (3 reasons) | Yes |
+| Hypothetical | N/A — fabricated evidence | ALLOWED (with measured facts) | N/A |
 
-The system converges with published reality in all three cases. The refusal reasons are not generic — they identify the specific evidence gaps (ungraded residence, non-exhaustive tissue claims, unknown outcome distributions) that the literature also identifies as open problems.
-
-The system does not and cannot say "this therapy works" or "this therapy fails." It says what can be proven from the inputs, and refuses what cannot. For all three therapies, `eliminates_reservoir` cannot be proven, which is correct.
+The system converges with published reality in all three real cases. The refusal reasons are not generic — they identify the specific evidence gaps that the literature also identifies as open problems.
