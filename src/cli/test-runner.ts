@@ -20,6 +20,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve as resolvePath, basename } from "node:path";
 import { build } from "./build.ts";
 import { applyHoldout, type HoldoutSet, type FixtureHoldoutMeta } from "./holdout.ts";
+import { validateObserved, type ObservedValue } from "../registry/normalisation.ts";
 
 export type FixtureKind = "golden" | "falsification" | "unit";
 
@@ -32,6 +33,16 @@ export interface FixtureMeta {
     date?: string;
     lab?: string;
     vector_family?: string;
+  };
+  observed?: {
+    entries: Array<{
+      raw: string;
+      normalised: number;
+      rule: string;
+      by: string;
+      date: string;
+    }>;
+    contested: boolean;
   };
 }
 
@@ -112,6 +123,30 @@ export function runTests(
         message: "contested — excluded from scoring",
       });
       continue;
+    }
+
+    // Validate and handle observed normalisation block
+    if (meta.observed) {
+      const obsErrors = validateObserved(meta.observed);
+      if (obsErrors.length > 0) {
+        results.push({
+          fixture: file,
+          kind: meta.kind,
+          passed: false,
+          message: `observed block invalid: ${obsErrors[0]}`,
+        });
+        fixtureFailures++;
+        continue;
+      }
+      if (meta.observed.contested) {
+        results.push({
+          fixture: file,
+          kind: meta.kind,
+          passed: true, // not scored
+          message: "observed contested — excluded from scoring",
+        });
+        continue;
+      }
     }
 
     const source = readFileSync(resolvePath(testDir, file), "utf-8");

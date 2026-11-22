@@ -9,8 +9,9 @@
  * locus registry validate <path>        0 valid, 2 invalid
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve as resolvePath } from "node:path";
+import type { HoldoutSet } from "./holdout.ts";
 import { build } from "./build.ts";
 import { diffCorpus } from "./diff.ts";
 import { runTests } from "./test-runner.ts";
@@ -26,9 +27,10 @@ function usage(): never {
   console.error(`Usage:
   locus build <file> --genome <fasta> [--genome-name <name>] [--json]
   locus check <file>
-  locus test <fixtures-dir> --genome <fasta> [--genome-name <name>]
+  locus test <fixtures-dir> --genome <fasta> [--genome-name <name>] [--no-holdout]
   locus diff <fixtures-dir> --genome-a <fasta> --genome-b <fasta> [--name-a <n>] [--name-b <n>]
   locus why <assertion> --ir <ir.json>
+  locus init
   locus registry validate <path>
 `);
   process.exit(2);
@@ -47,11 +49,14 @@ switch (command) {
     if (!file || !genomePath) usage();
 
     const source = readFileSync(resolvePath(file), "utf-8");
+    const precomputed = flagValue("--precomputed");
     const result = build({
       source,
       genomePath: resolvePath(genomePath),
       genomeName: flagValue("--genome-name"),
       json: args.includes("--json"),
+      scanCacheDir: flagValue("--scan-cache"),
+      precomputedPath: precomputed ? resolvePath(precomputed) : undefined,
     });
 
     const isJson = args.includes("--json");
@@ -156,10 +161,25 @@ switch (command) {
     const testGenome = flagValue("--genome");
     if (!testDir || !testGenome) usage();
 
+    // Load default holdout set unless --no-holdout is passed
+    let holdout: HoldoutSet | undefined;
+    if (!args.includes("--no-holdout")) {
+      const holdoutPath = resolvePath("registry/holdout.json");
+      if (existsSync(holdoutPath)) {
+        const raw = JSON.parse(readFileSync(holdoutPath, "utf-8"));
+        holdout = {
+          after_date: raw.after_date,
+          labs: raw.labs,
+          vector_families: raw.vector_families,
+        };
+      }
+    }
+
     const testResult = runTests(
       resolvePath(testDir),
       resolvePath(testGenome),
       flagValue("--genome-name"),
+      holdout,
     );
 
     for (const r of testResult.results) {
@@ -170,6 +190,7 @@ switch (command) {
 
     console.log("");
     console.log(`${testResult.passed}/${testResult.total} passed`);
+    if (testResult.heldOut > 0) console.log(`${testResult.heldOut} held out`);
     if (testResult.blocksBuild) console.log("BLOCKS BUILD: unit test failure");
     if (testResult.blocksRelease && !testResult.blocksBuild) console.log("BLOCKS RELEASE: fixture failure");
 
@@ -212,6 +233,12 @@ switch (command) {
       process.exit(2);
     }
     usage();
+    break;
+  }
+
+  case "init": {
+    const { init } = await import("./init.ts");
+    init();
     break;
   }
 

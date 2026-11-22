@@ -56,6 +56,15 @@ export interface Fact {
   from: string[];
   source?: string;
   note?: string;
+  provenance?: {
+    model: string;
+    model_version: string;
+    prompt_hash: string;
+    extraction_date: string;
+    source_id: string;
+    source_span?: { start: number; end: number };
+    reviewer: string | null;
+  };
 }
 
 /**

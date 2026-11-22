@@ -1,0 +1,6 @@
+{
+  "$comment": "Default holdout set for corpus validation. A fixture is held out if it matches on ANY key.",
+  "after_date": "2024-01-01",
+  "labs": [],
+  "vector_families": []
+}
