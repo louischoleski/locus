@@ -31,6 +31,7 @@ function usage(): never {
   locus diff <fixtures-dir> --genome-a <fasta> --genome-b <fasta> [--name-a <n>] [--name-b <n>]
   locus why <assertion> <file> --genome <fasta> [--genome-name <name>]
   locus why <assertion> --ir <ir.json>
+  locus audit <file> --genome <fasta> [--genome-name <name>] [--facts <json>]
   locus init
   locus registry validate <path>
 `);
@@ -251,6 +252,43 @@ switch (command) {
       console.log(JSON.stringify(result.changes, null, 2));
     }
     process.exit(result.needsReviewer ? 1 : 0);
+    break;
+  }
+
+  case "audit": {
+    const auditFile = args[1];
+    const auditGenome = flagValue("--genome");
+    if (!auditFile || !auditGenome) usage();
+
+    const auditSource = readFileSync(resolvePath(auditFile), "utf-8");
+    const auditExternalFacts = flagValue("--facts");
+    const auditResult = build({
+      source: auditSource,
+      genomePath: resolvePath(auditGenome),
+      genomeName: flagValue("--genome-name"),
+      externalFactsPath: auditExternalFacts ? resolvePath(auditExternalFacts) : undefined,
+    });
+
+    if (!auditResult.ir) {
+      if (auditResult.errors) {
+        for (const e of auditResult.errors) {
+          console.error(`${e.code}  ${e.message}`);
+        }
+      }
+      process.exit(2);
+    }
+
+    const { audit: runAudit } = await import("./audit.ts");
+    const auditReport = runAudit(auditResult.ir);
+
+    if (args.includes("--json")) {
+      const { report: _, ...data } = auditReport;
+      console.log(JSON.stringify(data, null, 2));
+    } else {
+      console.log(auditReport.report);
+    }
+
+    process.exit(auditReport.completeness.refused > 0 ? 1 : 0);
     break;
   }
 
