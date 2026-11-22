@@ -1,0 +1,63 @@
+{
+  "$comment": "Facts from a detection vector assay post-excision. A dCas9-VPR reporter vector targeting the same HSV-2 signatures was delivered to sacral DRG neurons 14 days after excision therapy. GFP fluorescence was quantified per cell.",
+
+  "facts": [
+    {
+      "id": "f_detection_assay",
+      "claim": "eliminates_reservoir",
+      "subject": {
+        "target": "HSV2Latent",
+        "method": "dCas9-VPR-GFP reporter assay",
+        "tissue": "neuron.sensory.sacral",
+        "timepoint": "14 days post-excision",
+        "sample_size": 847,
+        "fluorescent_cells": 12,
+        "dark_cells": 835,
+        "residual_fraction": 0.014
+      },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.xxxx/hypothetical-reporter-assay",
+      "note": "12/847 neurons showed residual HSV signature (1.4%). This is a measured upper bound on residual viral DNA. Whether 98.6% clearance constitutes 'elimination' is a threshold question the system does not answer — it reports the measurement."
+    },
+    {
+      "id": "f_detection_controls",
+      "claim": "detection_assay_controls",
+      "subject": {
+        "positive_control": "untreated HSV+ ganglia: 823/850 cells fluorescent (96.8%)",
+        "negative_control": "uninfected ganglia: 0/800 cells fluorescent (0%)",
+        "sensitivity": "detects single-copy HSV genome per cell",
+        "specificity": "no cross-reactivity with host genome confirmed by negative control"
+      },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.xxxx/hypothetical-reporter-assay"
+    }
+  ],
+
+  "outcome_distribution": {
+    "status": "measured",
+    "space": ["uncut", "partial", "rejoined", "indel", "deleted", "inverted", "degraded"],
+    "data": {
+      "source": "doi:10.xxxx/hypothetical-reporter-assay",
+      "method": "dCas9-VPR-GFP reporter + single-cell sequencing of dark cells",
+      "effector": "dual meganuclease",
+      "site_pair": ["GATCTTGGACGT", "TTACGCAAGCTT"],
+      "cell_type": "neuron.sensory.sacral",
+      "organism": "human",
+      "grade": { "m": "measured", "o": "same" },
+      "distribution": {
+        "uncut": 0.014,
+        "partial": 0.003,
+        "rejoined": 0.008,
+        "indel": 0.045,
+        "deleted": 0.890,
+        "inverted": 0.005,
+        "degraded": 0.035
+      },
+      "note": "Measured in 847 sacral DRG neurons from 6 human organoid samples. 89% deletion + 3.5% degradation = 92.5% successful excision per copy. 1.4% uncut (residual). Rejoined and inverted outcomes are named and counted — the system does not silently count them as success."
+    }
+  }
+}

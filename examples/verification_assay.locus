@@ -1,0 +1,39 @@
+// Verification by detection vector.
+//
+// After excision, deliver a reporter vector that fluoresces
+// only in the presence of the target viral DNA signature.
+// No fluorescence = signature eliminated. Fluorescence = residual copies.
+//
+// This converts "outcome distribution unknown" into a measured fact.
+//
+// Biology:
+//   1. Excise the target (standard CRISPR/meganuclease)
+//   2. Wait for clearance (days to weeks)
+//   3. Deliver a detection vector carrying:
+//      - A CRISPR guide matching the SAME target signature
+//      - A deactivated Cas (dCas) fused to a transcriptional activator
+//      - A reporter gene (e.g., GFP) under a minimal promoter
+//   4. If target DNA remains: dCas binds → activator drives GFP → fluorescence
+//      If target DNA is gone: dCas has nothing to bind → no GFP → dark
+//   5. Quantify: fraction of cells fluorescent = fraction with residual target
+//
+// This is not hypothetical. dCas9-VPR reporter systems exist.
+// What's new is using it as a formal verification step in the Locus pipeline.
+//
+// Run with:
+//   locus build examples/verification_assay.locus \
+//     --genome fixtures/corpus/corpus_genome.fa \
+//     --facts examples/verification_assay_facts.json
+//
+//   locus audit examples/verification_assay.locus \
+//     --genome fixtures/corpus/corpus_genome.fa \
+//     --facts examples/verification_assay_facts.json
+
+target HSV2Latent {
+  organism human
+  tolerance 0
+  signatures all [ GATCTTGGACGT, TTACGCAAGCTT ]
+  in only [ neuron.sensory.sacral ] @measured(human)
+}
+
+excise HSV2Latent
