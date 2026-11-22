@@ -1,0 +1,27 @@
+// Real case: HBV cccDNA excision
+// Multiple groups (Seeger & Sohn 2014, Ramanan et al. 2015, Stone et al. 2021)
+//
+// Mechanism: CRISPR-Cas9 targeting of HBV cccDNA (covalently closed circular DNA)
+// that persists in hepatocyte nuclei as the template for chronic infection.
+// Dual guides flanking the HBV genome for excision.
+//
+// Published outcome (Stone et al., Molecular Therapy 2021):
+//   - AAV-delivered Cas9 + dual guides in HBV mouse models
+//   - Significant reduction in cccDNA and HBsAg
+//   - Complete cccDNA elimination NOT achieved
+//   - Hepatocyte turnover complicates long-term assessment
+//
+// Known ground truth: eliminates_reservoir should be REFUSED.
+// cccDNA is remarkably stable, and no published study has demonstrated
+// complete elimination of the HBV reservoir. The exhaustive claim
+// (hepatocyte-only residence) is also questionable — HBV DNA has been
+// detected in PBMCs and other extrahepatic sites.
+
+target Hbv_CccDNA {
+  organism human
+  tolerance 0
+  signatures all [ ACCGTAGCTAACGATCG, TGCAATCGGTACCTGAA ]
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise Hbv_CccDNA

@@ -1,0 +1,28 @@
+// Real case: Vertex/CRISPR — Casgevy (exagamglogene autotemcel)
+// FDA-approved December 2023 for sickle cell disease and transfusion-dependent beta-thalassemia.
+//
+// Mechanism: CRISPR-Cas9 disruption of the BCL11A erythroid-specific enhancer
+// at the +58 region, reactivating fetal hemoglobin (HbF) production.
+// Guide targets the GATA1 binding site in the BCL11A enhancer.
+//
+// Published outcome (Frangoul et al., NEJM 2021, doi:10.1056/NEJMoa2031054):
+//   - Ex vivo editing of patient CD34+ HSCs, then autologous transplant
+//   - Sustained HbF elevation (>40%) in treated patients
+//   - Transfusion independence achieved in most patients
+//   - This is enhancer disruption, not viral reservoir elimination
+//
+// Known ground truth: eliminates_reservoir should be REFUSED.
+// This is not a reservoir elimination — it's enhancer disruption to
+// reactivate a compensatory gene. The BCL11A gene itself is not excised,
+// only its erythroid enhancer is disrupted. The "excise" framing is
+// technically correct (a segment is cut) but the therapeutic goal is
+// not reservoir elimination.
+
+target BCL11AEnhancer {
+  organism human
+  tolerance 0
+  signatures TCAAGGTCCTAAGCGAT
+  in [ hematopoietic.stem.cell ] @measured(human)
+}
+
+excise BCL11AEnhancer

@@ -1,0 +1,24 @@
+// Real case: Jerome et al., Nature Communications 2020 / Aubert et al., Nature Communications 2024
+//
+// HSV-2 latent reservoir excision using dual meganuclease / CRISPR guides
+// targeting the HSV-2 genome in latently infected sacral dorsal root ganglia.
+//
+// Published outcome (Aubert et al. 2024, doi:10.1038/s41467-024-45030-1):
+//   - AAV-delivered meganucleases targeting HSV in mouse DRG
+//   - ~90-97% reduction in latent HSV DNA in sacral ganglia
+//   - Complete elimination NOT achieved
+//   - Some animals showed undetectable viral DNA, most did not
+//
+// Known ground truth: eliminates_reservoir should be REFUSED.
+// The therapy reduces but does not eliminate the latent reservoir.
+// Key gaps: outcome distribution unmeasured in humans, residence
+// not proven exhaustive (HSV latency may extend beyond sacral DRG).
+
+target HSV2Latent {
+  organism human
+  tolerance 0
+  signatures all [ GATCTTGGACGT, TTACGCAAGCTT ]
+  in [ neuron.sensory.sacral ] @asserted(human)
+}
+
+excise HSV2Latent
