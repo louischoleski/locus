@@ -1,0 +1,25 @@
+// Hypothetical case: what a fully supported elimination claim looks like.
+//
+// This is not a real therapy. It is a demonstration of what the system
+// requires before it will allow `eliminates_reservoir`:
+//
+//   1. Guide sequence unique in the reference genome (0 occurrences)
+//   2. Residence declared exhaustive (`only`) with measured grade
+//   3. Outcome distribution measured (provided via --facts)
+//   4. Supporting fact for eliminates_reservoir at grade (measured, same)
+//
+// All four conditions must be met. If any one is missing, the system refuses.
+//
+// Run with:
+//   locus build examples/full_elimination.locus \
+//     --genome fixtures/corpus/corpus_genome.fa \
+//     --facts examples/full_elimination_facts.json
+
+target HypotheticalVirus {
+  organism human
+  tolerance 0
+  signatures AAACCCGGGTTTAAACCCGGGTTT
+  in only [ hepatocyte ] @measured(human)
+}
+
+excise HypotheticalVirus

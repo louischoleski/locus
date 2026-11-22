@@ -51,6 +51,7 @@ switch (command) {
 
     const source = readFileSync(resolvePath(file), "utf-8");
     const precomputed = flagValue("--precomputed");
+    const externalFacts = flagValue("--facts");
     const result = build({
       source,
       genomePath: resolvePath(genomePath),
@@ -58,6 +59,7 @@ switch (command) {
       json: args.includes("--json"),
       scanCacheDir: flagValue("--scan-cache"),
       precomputedPath: precomputed ? resolvePath(precomputed) : undefined,
+      externalFactsPath: externalFacts ? resolvePath(externalFacts) : undefined,
     });
 
     const isJson = args.includes("--json");

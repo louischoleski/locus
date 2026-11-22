@@ -1,0 +1,39 @@
+{
+  "$comment": "External measured facts for the hypothetical full-elimination example. In a real scenario, these would come from published experimental data: an in vivo study measuring excision outcomes per cell in the target tissue.",
+
+  "facts": [
+    {
+      "id": "f_ext_elimination",
+      "claim": "eliminates_reservoir",
+      "subject": { "target": "HypotheticalVirus", "tissue": "hepatocyte", "model": "human_liver_organoid" },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.xxxx/hypothetical-study",
+      "note": "Hypothetical: measured elimination of viral reservoir in human liver organoids. In reality, no gene therapy has achieved this with sufficient evidence to pass this floor."
+    }
+  ],
+
+  "outcome_distribution": {
+    "status": "measured",
+    "space": ["uncut", "partial", "rejoined", "indel", "deleted", "inverted", "degraded"],
+    "data": {
+      "source": "doi:10.xxxx/hypothetical-study",
+      "effector": "SpCas9",
+      "site_pair": "AAACCCGGGTTTAAACCCGGGTTT",
+      "cell_type": "hepatocyte",
+      "organism": "human",
+      "grade": { "m": "measured", "o": "same" },
+      "distribution": {
+        "uncut": 0.02,
+        "partial": 0.00,
+        "rejoined": 0.03,
+        "indel": 0.10,
+        "deleted": 0.80,
+        "inverted": 0.01,
+        "degraded": 0.04
+      },
+      "note": "Hypothetical distribution. 80% deletion + 4% degradation = 84% success per copy. These numbers are fabricated for demonstration."
+    }
+  }
+}

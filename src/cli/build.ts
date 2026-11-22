@@ -32,6 +32,7 @@ export interface BuildOptions {
   json?: boolean;
   scanCacheDir?: string;
   precomputedPath?: string;
+  externalFactsPath?: string;
 }
 
 export interface BuildResult {
@@ -183,12 +184,26 @@ export function build(opts: BuildOptions): BuildResult {
     }
   }
 
-  // Pass 3: judge
-  const outcome: OutcomeDistribution = {
+  // Load external facts if provided
+  let outcome: OutcomeDistribution = {
     status: "unknown",
     space: [...EXCISE_OUTCOMES],
   };
 
+  if (opts.externalFactsPath) {
+    const external = JSON.parse(readFileSync(opts.externalFactsPath, "utf-8"));
+    if (Array.isArray(external.facts)) {
+      for (const f of external.facts as Fact[]) {
+        factCounter++;
+        allFacts.push({ ...f, id: f.id ?? `f_ext${factCounter}` });
+      }
+    }
+    if (external.outcome_distribution) {
+      outcome = external.outcome_distribution;
+    }
+  }
+
+  // Pass 3: judge
   const assertions = judge(target, allFacts, outcome);
   const hasRefusal = assertions.some((a) => a.status === "refused");
 
