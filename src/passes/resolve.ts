@@ -60,12 +60,16 @@ export function resolve(source: string, vocabDir?: string): ResolveResult | { er
     const { resolved, errors: vocabErrors } = vocab.resolveAll(pt.residence.tissues);
     if (vocabErrors.length > 0) {
       return {
-        errors: vocabErrors.map((e) => ({
-          code: e.code,
-          line: pt.line,
-          col: pt.col,
-          message: `${e.message}; nearest: ${e.nearestMatches.slice(0, 3).join(", ")}`,
-        })),
+        errors: vocabErrors.map((e) => {
+          // Find the tissue location for this specific term
+          const loc = pt.tissueLocs.find((t) => t.path === e.term);
+          return {
+            code: e.code,
+            line: loc?.line ?? pt.line,
+            col: loc?.col ?? pt.col,
+            message: `${e.message}; nearest: ${e.nearestMatches.slice(0, 3).join(", ")}`,
+          };
+        }),
       };
     }
     resolvedTissues = resolved;

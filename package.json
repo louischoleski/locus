@@ -5,11 +5,13 @@
   "type": "module",
   "private": true,
   "bin": {
-    "locus": "./dist/cli.js"
+    "locus": "./bin/locus"
   },
   "scripts": {
+    "start": "node --experimental-strip-types src/cli/main.ts",
     "build": "tsc",
-    "test": "node --test --experimental-strip-types --test-reporter spec 'src/**/*.test.ts'",
+    "test": "node --test --experimental-strip-types 'src/**/*.test.ts'",
+    "test:corpus": "node --experimental-strip-types src/cli/main.ts test fixtures/corpus --genome fixtures/corpus/corpus_genome.fa --genome-name corpus_v0.1",
     "check": "tsc --noEmit"
   },
   "devDependencies": {

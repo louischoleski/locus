@@ -25,12 +25,19 @@ export interface ParsedProgram {
   statement: Intent;
 }
 
+export interface TissueLoc {
+  path: string;
+  line: number;
+  col: number;
+}
+
 export interface ParsedTarget {
   name: string;
   organism: string | null;
   tolerance: number | null;
   signatures: Signatures | null;
   residence: Residence | null;
+  tissueLocs: TissueLoc[];
   line: number;
   col: number;
 }
@@ -98,7 +105,8 @@ export function parse(tokens: Token[]): { program: ParsedProgram | null; errors:
     };
   }
 
-  function parseTissue(): string {
+  function parseTissue(): TissueLoc {
+    const startTok = cur();
     let path = cur().value;
     pos++;
     while (cur().kind === "dot") {
@@ -106,10 +114,10 @@ export function parse(tokens: Token[]): { program: ParsedProgram | null; errors:
       path += "." + cur().value;
       pos++;
     }
-    return path;
+    return { path, line: startTok.line, col: startTok.col };
   }
 
-  function parseTissues(): string[] {
+  function parseTissues(): TissueLoc[] {
     if (cur().kind === "lbracket") {
       pos++; // [
       const tissues = [parseTissue()];
@@ -165,19 +173,22 @@ export function parse(tokens: Token[]): { program: ParsedProgram | null; errors:
     return null;
   }
 
-  function parseResidence(): Residence | null {
+  function parseResidence(): { residence: Residence; tissueLocs: TissueLoc[] } | null {
     expectKw("in");
     let exhaustive = false;
     if (cur().kind === "keyword" && cur().value === "only") {
       exhaustive = true;
       pos++;
     }
-    const tissues = parseTissues();
+    const tissueLocs = parseTissues();
     const grade = parseGrade();
     return {
-      tissues,
-      exhaustive,
-      grade: grade ?? { m: "asserted" as Grade["m"], o: "unknown" as Grade["o"] },
+      residence: {
+        tissues: tissueLocs.map((t) => t.path),
+        exhaustive,
+        grade: grade ?? { m: "asserted" as Grade["m"], o: "unknown" as Grade["o"] },
+      },
+      tissueLocs,
     };
   }
 
@@ -194,6 +205,7 @@ export function parse(tokens: Token[]): { program: ParsedProgram | null; errors:
       tolerance: null,
       signatures: null,
       residence: null,
+      tissueLocs: [],
       line: startTok.line,
       col: startTok.col,
     };
@@ -205,9 +217,14 @@ export function parse(tokens: Token[]): { program: ParsedProgram | null; errors:
           case "signatures":
             target.signatures = parseSignatures();
             break;
-          case "in":
-            target.residence = parseResidence();
+          case "in": {
+            const res = parseResidence();
+            if (res) {
+              target.residence = res.residence;
+              target.tissueLocs = res.tissueLocs;
+            }
             break;
+          }
           case "organism": {
             pos++;
             const org = eat("ident");

@@ -29,6 +29,7 @@ function usage(): never {
   locus check <file>
   locus test <fixtures-dir> --genome <fasta> [--genome-name <name>] [--no-holdout]
   locus diff <fixtures-dir> --genome-a <fasta> --genome-b <fasta> [--name-a <n>] [--name-b <n>]
+  locus why <assertion> <file> --genome <fasta> [--genome-name <name>]
   locus why <assertion> --ir <ir.json>
   locus init
   locus registry validate <path>
@@ -116,13 +117,44 @@ switch (command) {
 
   case "why": {
     const assertion = args[1];
-    const irPath = flagValue("--ir");
-    if (!assertion || !irPath) usage();
+    if (!assertion) usage();
 
-    const ir = JSON.parse(readFileSync(resolvePath(irPath), "utf-8"));
+    let ir: { assertions: any[]; facts: Fact[] };
+    const irPath = flagValue("--ir");
+
+    if (irPath) {
+      // Legacy mode: load from pre-built IR JSON
+      ir = JSON.parse(readFileSync(resolvePath(irPath), "utf-8"));
+    } else {
+      // Inline mode: build and extract IR
+      const whyFile = args[2];
+      const whyGenome = flagValue("--genome");
+      if (!whyFile || !whyGenome) {
+        console.error("locus why needs either --ir <file> or <design.locus> --genome <fasta>");
+        process.exit(2);
+      }
+      const whySource = readFileSync(resolvePath(whyFile), "utf-8");
+      const whyResult = build({
+        source: whySource,
+        genomePath: resolvePath(whyGenome),
+        genomeName: flagValue("--genome-name"),
+      });
+      if (!whyResult.ir) {
+        if (whyResult.errors) {
+          for (const e of whyResult.errors) {
+            const loc = e.line ? `:${e.line}:${e.col}` : "";
+            console.error(`${e.code}  ${whyFile}${loc}  ${e.message}`);
+          }
+        }
+        process.exit(2);
+      }
+      ir = whyResult.ir;
+    }
+
     const a = ir.assertions?.find((x: { name: string }) => x.name === assertion);
     if (!a) {
-      console.error(`assertion '${assertion}' not found in IR`);
+      console.error(`assertion '${assertion}' not found`);
+      console.error(`available: ${ir.assertions.map((x: { name: string }) => x.name).join(", ")}`);
       process.exit(2);
     }
 
