@@ -1,0 +1,10 @@
+// Single-site design — no combinator needed.
+
+target SimpleKnockout {
+  organism human
+  tolerance 1
+  signatures GATCTTGGACGT
+  in only [ neuron.cortical ] @measured(human)
+}
+
+excise SimpleKnockout

@@ -1,0 +1,19 @@
+{
+  "name": "locus",
+  "version": "0.1.0",
+  "description": "Specificity checker for gene therapy designs",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "locus": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test --experimental-strip-types --test-reporter spec 'src/**/*.test.ts'",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}

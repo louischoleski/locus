@@ -1,0 +1,11 @@
+// HSV-2 latent reservoir excision — the spec's running example.
+// Two guide sites in the latent genome.
+
+target HSV2Latent {
+  organism human
+  tolerance 0
+  signatures all [ GATCTTGGACGT, TTACGCAAGCTT ]
+  in [ neuron.sensory.sacral ] @asserted(human)
+}
+
+excise HSV2Latent

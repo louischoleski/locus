@@ -1,0 +1,21 @@
+{
+  "$comment": "Assertion floor table. A fact must meet or exceed both axes to support the assertion.",
+  "floors": [
+    {
+      "assertion": "signature_unique_in_reference",
+      "floor": { "m": "computed", "o": "n/a" }
+    },
+    {
+      "assertion": "sequence_unique_in_host",
+      "floor": { "m": "inferred", "o": "same" }
+    },
+    {
+      "assertion": "construct_fits_vehicle",
+      "floor": { "m": "measured", "o": "n/a" }
+    },
+    {
+      "assertion": "eliminates_reservoir",
+      "floor": { "m": "measured", "o": "same" }
+    }
+  ]
+}

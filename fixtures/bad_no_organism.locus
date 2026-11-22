@@ -1,0 +1,8 @@
+// This fixture must fail: organism is mandatory.
+
+target Broken {
+  tolerance 0
+  signatures ACGTACGT
+}
+
+excise Broken

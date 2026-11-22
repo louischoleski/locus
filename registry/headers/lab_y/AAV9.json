@@ -1,0 +1,17 @@
+{
+  "id": "lab_y/AAV9",
+  "kind": "vehicle",
+  "capacity": { "nominal_kb": 4.4, "soft_limit_kb": 4.9, "grade": { "m": "measured", "o": null } },
+  "accepts": ["transgene"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0000955",
+      "level": "moderate",
+      "grade": { "m": "measured", "o": "mouse" },
+      "source": "doi:10.1126/science.aao3066"
+    }
+  ],
+  "redosable": { "value": false, "grade": { "m": "inferred", "o": null } },
+  "provenance": { "extracted_by": "gpt-4o", "reviewed_by": "mk", "date": "2026-11-22" }
+}
