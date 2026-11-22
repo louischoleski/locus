@@ -1,0 +1,10 @@
+// Sickle cell disease with measured residence.
+
+target SCDMeasured {
+  organism human
+  tolerance 0
+  signatures TCAAGGTCCTAAGCGAT
+  in [ hematopoietic.stem.cell ] @measured(human)
+}
+
+excise SCDMeasured

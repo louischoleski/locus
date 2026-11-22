@@ -1,0 +1,10 @@
+{
+  "kind": "falsification",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2024-04-01",
+    "lab": "minimal_lab",
+    "vector_family": "AAV"
+  }
+}

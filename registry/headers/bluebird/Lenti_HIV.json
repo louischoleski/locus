@@ -1,0 +1,17 @@
+{
+  "id": "bluebird/Lenti_HIV",
+  "kind": "vehicle",
+  "capacity": { "nominal_kb": 8.0, "soft_limit_kb": 10.0, "grade": { "m": "measured", "o": null } },
+  "accepts": ["transgene"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0002371",
+      "level": "high",
+      "grade": { "m": "measured", "o": "human" },
+      "source": "doi:10.1056/NEJMoa2117175"
+    }
+  ],
+  "redosable": { "value": false, "grade": { "m": "measured", "o": null } },
+  "provenance": { "extracted_by": "model", "reviewed_by": null, "date": "2026-11-22" }
+}

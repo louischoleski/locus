@@ -1,0 +1,17 @@
+{
+  "id": "arrowhead/LNP_SM102",
+  "kind": "vehicle",
+  "capacity": { "nominal_kb": 10.0, "soft_limit_kb": 15.0, "grade": { "m": "measured", "o": null } },
+  "accepts": ["transgene"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0002107",
+      "level": "high",
+      "grade": { "m": "measured", "o": "mouse" },
+      "source": "doi:10.1038/s41586-021-03529-7"
+    }
+  ],
+  "redosable": { "value": true, "grade": { "m": "inferred", "o": null } },
+  "provenance": { "extracted_by": "model", "reviewed_by": null, "date": "2026-11-22" }
+}

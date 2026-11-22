@@ -1,0 +1,10 @@
+{
+  "kind": "falsification",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2024-06-01",
+    "lab": "test_lab",
+    "vector_family": "LNP"
+  }
+}

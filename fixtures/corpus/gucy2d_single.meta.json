@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2020-10-01",
+    "lab": "hauswirth_lab",
+    "vector_family": "AAV"
+  }
+}

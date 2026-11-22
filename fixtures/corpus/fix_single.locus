@@ -1,0 +1,10 @@
+// Factor IX hemophilia B correction — single guide, Nathwani lab (2018).
+
+target FactorIXHemB {
+  organism human
+  tolerance 0
+  signatures CAATCGGTACCTGAAGT
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise FactorIXHemB

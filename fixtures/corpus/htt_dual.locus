@@ -1,0 +1,10 @@
+// Huntington HTT exon 1 excision — dual guide, Bhatt lab (2024).
+
+target HTTExon1 {
+  organism human
+  tolerance 0
+  signatures all [ GCTAGCAATCGTACCGA, TGACCCTAAGTCGATCG ]
+  in [ neuron.cortical ] @asserted(human)
+}
+
+excise HTTExon1

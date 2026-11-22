@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2024-01-15",
+    "lab": "precision_bio",
+    "vector_family": "LNP"
+  }
+}

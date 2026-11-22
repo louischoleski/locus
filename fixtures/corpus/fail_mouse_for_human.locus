@@ -1,0 +1,11 @@
+// Failure: mouse residence data for human target — organism mismatch
+// degrades grade to "related", failing eliminates_reservoir floor.
+
+target MouseForHuman {
+  organism human
+  tolerance 0
+  signatures ATCCAGTGCTAGCTTGA
+  in [ neuron ] @measured(mouse)
+}
+
+excise MouseForHuman

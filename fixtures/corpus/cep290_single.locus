@@ -1,0 +1,10 @@
+// CEP290 LCA10 correction — single guide, Maeder lab (2019).
+
+target CEP290LCA10 {
+  organism human
+  tolerance 0
+  signatures TGCAATCCTGAAGTAGC
+  in [ photoreceptor ] @asserted(human)
+}
+
+excise CEP290LCA10

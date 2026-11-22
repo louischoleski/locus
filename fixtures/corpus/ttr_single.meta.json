@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2021-06-26",
+    "lab": "gillmore_lab",
+    "vector_family": "LNP"
+  }
+}

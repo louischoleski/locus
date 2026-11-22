@@ -1,0 +1,10 @@
+// HBV with exhaustive 'only' residence and asserted grade.
+
+target HBVStrict {
+  organism human
+  tolerance 0
+  signatures ACCGTAGCTAACGATCG
+  in only [ hepatocyte ] @asserted(human)
+}
+
+excise HBVStrict

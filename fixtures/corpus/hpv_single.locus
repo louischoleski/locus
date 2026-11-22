@@ -1,0 +1,10 @@
+// HPV16 E6 disruption — single guide, Hu lab (2020).
+
+target HPV16E6 {
+  organism human
+  tolerance 0
+  signatures GACCTGTTAGCAATCCG
+  in [ epithelial.cell ] @asserted(human)
+}
+
+excise HPV16E6

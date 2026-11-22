@@ -1,0 +1,28 @@
+{
+  "id": "genethon/AAV_rh74",
+  "kind": "vehicle",
+  "capacity": {
+    "nominal_kb": 4.7,
+    "soft_limit_kb": 5.0,
+    "grade": { "m": "measured", "o": null }
+  },
+  "accepts": ["transgene"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0001134",
+      "level": "high",
+      "grade": { "m": "measured", "o": "nhp" },
+      "source": "doi:10.1038/mt.2012.210"
+    }
+  ],
+  "redosable": {
+    "value": false,
+    "grade": { "m": "measured", "o": null }
+  },
+  "provenance": {
+    "extracted_by": "model",
+    "reviewed_by": null,
+    "date": "2026-11-22"
+  }
+}

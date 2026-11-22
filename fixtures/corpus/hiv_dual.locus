@@ -1,0 +1,10 @@
+// HIV provirus excision — dual guide, Khalili lab (2021).
+
+target HIVProvirus {
+  organism human
+  tolerance 0
+  signatures all [ ATCCAGTGCTAGCTTGA, TGACCGTAACTGCAATC ]
+  in [ cd4.t.cell ] @asserted(human)
+}
+
+excise HIVProvirus

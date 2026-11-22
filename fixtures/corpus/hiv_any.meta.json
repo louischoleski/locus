@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2023-11-01",
+    "lab": "excision_bio",
+    "vector_family": "AAV"
+  }
+}

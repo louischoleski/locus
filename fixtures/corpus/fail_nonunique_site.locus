@@ -1,0 +1,11 @@
+// Failure: multihit sequence ACGTACGTACGT appears 3 times in genome.
+// Non-unique site should cause eliminates_reservoir refusal.
+
+target MultihitSite {
+  organism human
+  tolerance 0
+  signatures ACGTACGTACGT
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise MultihitSite

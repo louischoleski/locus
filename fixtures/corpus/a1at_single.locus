@@ -1,0 +1,10 @@
+// SERPINA1 alpha-1 antitrypsin deficiency — single guide, Wilson lab (2020).
+
+target SERPINA1A1AT {
+  organism human
+  tolerance 0
+  signatures TGAAGCTTAGCAATCGG
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise SERPINA1A1AT

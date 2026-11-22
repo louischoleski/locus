@@ -1,0 +1,23 @@
+{
+  "id": "ucl/Ad5",
+  "kind": "vehicle",
+  "capacity": { "nominal_kb": 36.0, "soft_limit_kb": 37.0, "grade": { "m": "measured", "o": null } },
+  "accepts": ["transgene"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0002048",
+      "level": "high",
+      "grade": { "m": "measured", "o": "human" },
+      "source": "doi:10.1038/nbt1199_1075"
+    },
+    {
+      "term": "UBERON:0002107",
+      "level": "moderate",
+      "grade": { "m": "measured", "o": "human" },
+      "source": "doi:10.1038/nbt1199_1075"
+    }
+  ],
+  "redosable": { "value": true, "grade": { "m": "measured", "o": null } },
+  "provenance": { "extracted_by": "model", "reviewed_by": null, "date": "2026-11-22" }
+}

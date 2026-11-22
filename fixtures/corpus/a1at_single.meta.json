@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2020-07-15",
+    "lab": "wilson_lab",
+    "vector_family": "AAV"
+  }
+}

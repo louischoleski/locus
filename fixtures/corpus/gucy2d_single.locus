@@ -1,0 +1,10 @@
+// GUCY2D LCA1 correction — single guide, Hauswirth lab (2020).
+
+target GUCY2DLCA1 {
+  organism human
+  tolerance 0
+  signatures ATCCGTAGCTAACGATC
+  in [ photoreceptor ] @asserted(human)
+}
+
+excise GUCY2DLCA1

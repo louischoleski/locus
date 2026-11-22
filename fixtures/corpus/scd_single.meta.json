@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2023-09-01",
+    "lab": "wu_lab",
+    "vector_family": "lentivirus"
+  }
+}

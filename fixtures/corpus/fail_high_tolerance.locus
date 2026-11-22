@@ -1,0 +1,10 @@
+// Failure: tolerance 3 finds many near-matches, refused for eliminates_reservoir.
+
+target HighTolerance {
+  organism human
+  tolerance 3
+  signatures TCAAGGTCCTAAGCGAT
+  in [ hematopoietic.stem.cell ] @asserted(human)
+}
+
+excise HighTolerance

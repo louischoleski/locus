@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2022-02-01",
+    "lab": "intellia_lab",
+    "vector_family": "LNP"
+  }
+}

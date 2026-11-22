@@ -1,0 +1,17 @@
+{
+  "id": "broad/AAV_Spark200",
+  "kind": "vehicle",
+  "capacity": { "nominal_kb": 4.7, "soft_limit_kb": 5.0, "grade": { "m": "measured", "o": null } },
+  "accepts": ["transgene", "nuclease"],
+  "requires": [],
+  "tropism": [
+    {
+      "term": "UBERON:0000955",
+      "level": "moderate",
+      "grade": { "m": "measured", "o": "nhp" },
+      "source": "doi:10.1126/scitranslmed.abk1507"
+    }
+  ],
+  "redosable": { "value": false, "grade": { "m": "measured", "o": null } },
+  "provenance": { "extracted_by": "model", "reviewed_by": null, "date": "2026-11-22" }
+}

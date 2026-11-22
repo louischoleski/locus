@@ -1,0 +1,10 @@
+// HBV cccDNA excision — dual guide, Chen lab (2022).
+
+target Hbv_CccDNA {
+  organism human
+  tolerance 0
+  signatures all [ ACCGTAGCTAACGATCG, TGCAATCGGTACCTGAA ]
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise Hbv_CccDNA

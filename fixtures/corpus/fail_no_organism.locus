@@ -1,0 +1,9 @@
+// Failure: missing organism (mandatory field).
+
+target NoOrganism {
+  tolerance 0
+  signatures GATCTTGGACGT
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise NoOrganism

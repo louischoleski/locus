@@ -1,0 +1,9 @@
+// Failure: missing tolerance (mandatory field).
+
+target NoTolerance {
+  organism human
+  signatures GATCTTGGACGT
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise NoTolerance

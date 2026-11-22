@@ -1,0 +1,10 @@
+// TTR amyloidosis knockdown — single guide, Gillmore lab (2021).
+
+target TTRAmyloid {
+  organism human
+  tolerance 0
+  signatures AGCTTAGCAATCGGTAC
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise TTRAmyloid

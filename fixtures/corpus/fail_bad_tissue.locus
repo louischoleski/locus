@@ -1,0 +1,10 @@
+// Failure: unresolvable tissue term "xyzzy.quux".
+
+target BadTissue {
+  organism human
+  tolerance 0
+  signatures GATCTTGGACGT
+  in [ xyzzy.quux ] @asserted(human)
+}
+
+excise BadTissue

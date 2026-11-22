@@ -1,0 +1,10 @@
+// HSV-2 strict dual guide with exhaustive measured residence.
+
+target HSV2Strict {
+  organism human
+  tolerance 0
+  signatures all [ GATCTTGGACGT, TTACGCAAGCTT ]
+  in only [ neuron.sensory.sacral ] @measured(human)
+}
+
+excise HSV2Strict

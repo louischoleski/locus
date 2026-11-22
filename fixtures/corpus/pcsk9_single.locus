@@ -1,0 +1,10 @@
+// PCSK9 knockout — single guide, Musunuru lab (2021).
+
+target PCSK9Knockout {
+  organism human
+  tolerance 0
+  signatures GTACCGATCTTGAACGT
+  in [ hepatocyte ] @asserted(human)
+}
+
+excise PCSK9Knockout

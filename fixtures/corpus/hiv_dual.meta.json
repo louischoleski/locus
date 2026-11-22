@@ -1,0 +1,10 @@
+{
+  "kind": "golden",
+  "expect": "refused",
+  "assertion": "eliminates_reservoir",
+  "holdout": {
+    "date": "2021-07-20",
+    "lab": "khalili_lab",
+    "vector_family": "AAV"
+  }
+}

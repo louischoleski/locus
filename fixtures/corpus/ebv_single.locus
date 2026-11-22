@@ -1,0 +1,10 @@
+// EBV EBNA1 disruption — single guide, Lieberman lab (2023).
+
+target EBVEBNA1 {
+  organism human
+  tolerance 0
+  signatures GCTAGTCAACGATCCTG
+  in [ b.cell ] @asserted(human)
+}
+
+excise EBVEBNA1
