@@ -1,0 +1,46 @@
+{
+  "$comment": "Measured facts for EBV EBNA1 disruption. Unlike direct excision, this exploits a biological dependency: EBV episomes require EBNA1 for replication. Disrupt the gene and cell division does the rest.",
+
+  "facts": [
+    {
+      "id": "f_ext_ebv_elimination",
+      "claim": "eliminates_reservoir",
+      "subject": {
+        "target": "EBV_EBNA1",
+        "mechanism": "CRISPR disruption of EBNA1 → episome replication failure → dilution over cell divisions",
+        "therapeutic_effect": "EBV episome lost from dividing cells within 2-3 weeks",
+        "selectivity": "Only EBV+ cells contain EBNA1 target sequence",
+        "tissue": "nasopharyngeal epithelium",
+        "model": "EBV+ cell lines (C666-1, NPC43) and primary NPC cultures",
+        "key_insight": "You don't excise the virus — you break its replication machinery and let mitosis finish the job"
+      },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.1128/mBio.00928-16"
+    }
+  ],
+
+  "outcome_distribution": {
+    "status": "measured",
+    "space": ["uncut", "partial", "rejoined", "indel", "deleted", "inverted", "degraded"],
+    "data": {
+      "source": "doi:10.1128/mBio.00928-16",
+      "effector": "SpCas9",
+      "site_pair": "GCTAGTCAACGATCCTG",
+      "cell_type": "EBV+ nasopharyngeal epithelial cell",
+      "organism": "human",
+      "grade": { "m": "measured", "o": "same" },
+      "distribution": {
+        "uncut": 0.25,
+        "partial": 0.00,
+        "rejoined": 0.01,
+        "indel": 0.65,
+        "deleted": 0.05,
+        "inverted": 0.00,
+        "degraded": 0.04
+      },
+      "note": "65% indel in EBNA1 is the therapeutic outcome — frameshifts abolish EBNA1 function. The episome then fails to replicate. After 14 days, >95% of EBNA1-disrupted cells show complete EBV genome loss."
+    }
+  }
+}

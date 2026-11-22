@@ -1,0 +1,28 @@
+// Targeted therapy: HIV provirus excision from latently infected CD4+ T cells.
+//
+// The virus carries the drug to where the disease hides.
+//   Vector: AAV carrying dual CRISPR guides
+//   Target: HIV LTR sequences flanking the integrated provirus
+//   Tissue: CD4+ T cells (the latent HIV reservoir)
+//
+// How the sequence acts as the drug trigger:
+//   1. AAV delivers Cas9 + dual LTR guides to CD4+ T cells
+//   2. In cells WITHOUT integrated HIV: guides find no target → no effect
+//   3. In cells WITH integrated HIV: both guides cut flanking LTRs → provirus excised
+//   4. Excised cell is cured — no more viral rebound from that cell
+//
+// This is the "shock-free cure" approach: instead of activating latent virus
+// and killing reactivated cells (shock-and-kill), you remove the virus
+// from resting cells without ever waking it up.
+//
+// Real work: Excision BioTherapeutics EBT-101, NCT05144386 (Phase 1/2)
+// Kaminski et al. 2016, Dash et al. 2019
+
+target HIVProvirus {
+  organism human
+  tolerance 0
+  signatures all [ ATCCAGTGCTAGCTTGA, TGACCGTAACTGCAATC ]
+  in only [ cd4.t.cell ] @measured(human)
+}
+
+excise HIVProvirus

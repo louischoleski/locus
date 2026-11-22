@@ -1,0 +1,27 @@
+// Targeted therapy: HPV16 E6 oncogene excision in cervical cancer cells.
+//
+// The virus (AAV) is the drug delivery vehicle. It carries CRISPR-Cas9
+// with a guide targeting the HPV16 E6 oncogene. Only cells harboring
+// integrated HPV16 DNA are affected.
+//
+// Biology:
+//   1. AAV vector carrying Cas9 + E6-targeting guide is delivered systemically
+//      or locally to the cervix
+//   2. In cells WITHOUT HPV16 integration: Cas9 finds no target → no cut → no effect
+//   3. In cells WITH HPV16 integration: Cas9 binds E6 → cuts → disrupts oncogene
+//   4. E6 disruption restores p53 tumor suppressor → cancer cell death
+//
+// This is sequence-conditional drug delivery: the virus is the vehicle,
+// CRISPR is the sensor, and the therapeutic effect (p53 restoration)
+// only triggers in cells containing the target sequence.
+//
+// Real work: Hu et al. 2014, Kennedy et al. 2014, Zhen et al. 2020
+
+target HPV16_E6 {
+  organism human
+  tolerance 0
+  signatures GACCTGTTAGCAATCCG
+  in only [ epithelial.cell ] @measured(human)
+}
+
+excise HPV16_E6

@@ -1,0 +1,27 @@
+// Targeted therapy: EBV EBNA1 disruption in nasopharyngeal carcinoma.
+//
+// EBV (Epstein-Barr virus) persists as an episome in infected cells.
+// EBNA1 is essential for episome maintenance — disrupt it and the
+// viral genome is lost during cell division.
+//
+// The elegance: you don't need to cut every copy. You just need to
+// break EBNA1. Without it, the episome can't replicate, and daughter
+// cells dilute it out. The virus kills itself through the host's
+// normal cell division.
+//
+// Sequence as drug:
+//   1. AAV delivers CRISPR targeting EBNA1 coding sequence
+//   2. Cells without EBV: no target, no effect
+//   3. Cells with EBV: EBNA1 disrupted → episome maintenance fails
+//   4. Over ~2 weeks of cell division, EBV genome dilutes to zero
+//
+// Real work: van Diemen et al. 2016, Yuen et al. 2015
+
+target EBV_EBNA1 {
+  organism human
+  tolerance 0
+  signatures GCTAGTCAACGATCCTG
+  in only [ epithelial.cell ] @measured(human)
+}
+
+excise EBV_EBNA1

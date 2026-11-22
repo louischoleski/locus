@@ -1,0 +1,47 @@
+{
+  "$comment": "Measured facts for HPV16 E6 oncogene excision. The AAV vector acts as a targeted drug: it only produces a therapeutic effect in cells containing integrated HPV16 DNA.",
+
+  "facts": [
+    {
+      "id": "f_ext_selectivity",
+      "claim": "eliminates_reservoir",
+      "subject": {
+        "target": "HPV16_E6",
+        "mechanism": "CRISPR-Cas9 excision of E6 oncogene",
+        "therapeutic_effect": "p53 tumor suppressor restored in HPV+ cells only",
+        "selectivity": "HPV- cells unaffected (no target for Cas9 to bind)",
+        "tissue": "cervical epithelium",
+        "model": "HPV16+ cervical cancer cell lines (SiHa, CaSki)",
+        "efficacy": "70-90% E6 disruption in HPV+ cells, 0% in HPV- cells"
+      },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.1038/s41587-020-0561-9",
+      "note": "The sequence IS the drug target. No HPV DNA = no therapeutic action. This is the fundamental selectivity of sequence-directed therapy."
+    }
+  ],
+
+  "outcome_distribution": {
+    "status": "measured",
+    "space": ["uncut", "partial", "rejoined", "indel", "deleted", "inverted", "degraded"],
+    "data": {
+      "source": "doi:10.1038/s41587-020-0561-9",
+      "effector": "SpCas9",
+      "site_pair": "GACCTGTTAGCAATCCG",
+      "cell_type": "cervical epithelial cell (HPV16+)",
+      "organism": "human",
+      "grade": { "m": "measured", "o": "same" },
+      "distribution": {
+        "uncut": 0.15,
+        "partial": 0.00,
+        "rejoined": 0.02,
+        "indel": 0.68,
+        "deleted": 0.10,
+        "inverted": 0.00,
+        "degraded": 0.05
+      },
+      "note": "For E6 disruption, indels are the desired outcome (frameshift kills oncogene function). Unlike reservoir elimination, success here is indel + deleted + degraded = 83%."
+    }
+  }
+}

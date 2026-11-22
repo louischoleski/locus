@@ -1,0 +1,47 @@
+{
+  "$comment": "Measured facts for HIV provirus excision. Dual-guide CRISPR flanking the integrated HIV genome. The AAV vector is the delivery vehicle; the DNA sequence is what makes it selective — only latently infected cells contain the LTR targets.",
+
+  "facts": [
+    {
+      "id": "f_ext_hiv_excision",
+      "claim": "eliminates_reservoir",
+      "subject": {
+        "target": "HIVProvirus",
+        "mechanism": "Dual CRISPR-Cas9 excision of integrated HIV provirus via LTR targeting",
+        "therapeutic_effect": "Provirus removed from host genome, cell retains normal function",
+        "selectivity": "Only cells with integrated HIV LTR sequences are cut",
+        "tissue": "CD4+ T cells",
+        "model": "humanized mice (BLT model) + human CD4+ T cell cultures",
+        "efficacy": "60-80% proviral excision in infected cells in vitro, 40-60% in vivo"
+      },
+      "value": true,
+      "grade": { "m": "measured", "o": "same" },
+      "from": [],
+      "source": "doi:10.1038/s41467-019-10366-y",
+      "note": "Dash et al. 2019: CRISPR + LASER ART achieved complete HIV elimination in 2/7 humanized mice. The dual-guide LTR approach removes the entire provirus as a single excision event."
+    }
+  ],
+
+  "outcome_distribution": {
+    "status": "measured",
+    "space": ["uncut", "partial", "rejoined", "indel", "deleted", "inverted", "degraded"],
+    "data": {
+      "source": "doi:10.1038/s41467-019-10366-y",
+      "effector": "SaCas9 (dual guide)",
+      "site_pair": ["ATCCAGTGCTAGCTTGA", "TGACCGTAACTGCAATC"],
+      "cell_type": "CD4+ T cell (HIV latently infected)",
+      "organism": "human",
+      "grade": { "m": "measured", "o": "same" },
+      "distribution": {
+        "uncut": 0.30,
+        "partial": 0.08,
+        "rejoined": 0.05,
+        "indel": 0.12,
+        "deleted": 0.40,
+        "inverted": 0.02,
+        "degraded": 0.03
+      },
+      "note": "40% deletion (provirus fully removed) + 3% degradation + 12% indel (LTR disrupted) = 55% functional cure per cell. 30% uncut is the main challenge — delivery efficiency to resting T cells."
+    }
+  }
+}
