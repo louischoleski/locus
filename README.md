@@ -165,17 +165,38 @@ v0 refuses far more than it allows. That is the intended behaviour.
 
 ## Examples
 
-Four worked examples in [`examples/`](examples/):
+Eight worked examples in [`examples/`](examples/), covering convergence testing, verification, and virus-as-drug delivery.
 
-| Example | Outcome | Converges with reality? |
-|---------|---------|------------------------|
-| [HSV-2 excision](examples/hsv2_jerome_2021.locus) (Jerome lab) | REFUSED — 3 reasons | Yes: ~90% reduction published, not eliminated |
+### Convergence with published reality
+
+| Example | Outcome | Converges? |
+|---------|---------|------------|
+| [HSV-2 excision](examples/hsv2_jerome_2021.locus) (Jerome lab) | REFUSED — 3 reasons | Yes: ~90% reduction, not eliminated |
 | [Casgevy / BCL11A](examples/casgevy_bcl11a.locus) (Vertex/CRISPR) | REFUSED — 2 reasons | Yes: enhancer disruption, not reservoir elimination |
 | [HBV cccDNA](examples/hbv_excision.locus) (Stone et al.) | REFUSED — 3 reasons | Yes: reduced, not eliminated |
-| [Hypothetical full elimination](examples/full_elimination.locus) | ALLOWED (with `--facts`) | N/A: fabricated evidence |
-| [Detection vector assay](examples/verification_assay.locus) | ALLOWED (with `--facts`) | Demonstrates verification approach |
 
-The system converges with published reality in all three real cases.
+### Virus as drug delivery
+
+The virus is the vehicle. The DNA sequence is the trigger. Only cells containing the target sequence get the therapeutic effect. Each flips from REFUSED to ALLOWED when measured evidence is provided via `--facts`:
+
+```
+locus build examples/hpv_cervical_cancer.locus --genome fixtures/corpus/corpus_genome.fa --facts examples/hpv_cervical_cancer_facts.json
+```
+
+| Example | Target | Mechanism | Without evidence | With evidence |
+|---------|--------|-----------|-----------------|---------------|
+| [HPV cervical cancer](examples/hpv_cervical_cancer.locus) | HPV16 E6 oncogene | Cut E6 → restore p53 → cancer cell death | REFUSED | ALLOWED |
+| [HIV provirus cure](examples/hiv_provirus_cure.locus) | HIV LTR (dual guide) | Excise integrated provirus from resting T cells | REFUSED | ALLOWED |
+| [EBV nasopharyngeal](examples/ebv_nasopharyngeal.locus) | EBNA1 | Disrupt episome maintenance → virus dilutes out | REFUSED | ALLOWED |
+
+### Verification and full elimination
+
+| Example | Purpose |
+|---------|---------|
+| [Full elimination](examples/full_elimination.locus) | What all four conditions look like when met |
+| [Detection vector assay](examples/verification_assay.locus) | dCas9-VPR-GFP reporter to verify excision worked |
+
+The system converges with published reality in all three real cases. The virus-as-drug examples show how measured evidence converts a refusal into an allowance.
 
 ## Project structure
 
@@ -199,7 +220,7 @@ fixtures/
   corpus/            30 fixtures against 1MB synthetic genome
 
 examples/
-  5 worked examples with convergence analysis
+  8 worked examples (convergence, virus-as-drug, verification)
 ```
 
 ## Tests
