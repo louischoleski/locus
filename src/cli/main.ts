@@ -32,6 +32,7 @@ function usage(): never {
   locus why <assertion> <file> --genome <fasta> [--genome-name <name>]
   locus why <assertion> --ir <ir.json>
   locus audit <file> --genome <fasta> [--genome-name <name>] [--facts <json>]
+  locus drain --clearance <rate> --cells <n> --infection <rate> --copies <n> [--rounds <n>] [--detection <limit>] [--confidence <pct>]
   locus init
   locus registry validate <path>
 `);
@@ -289,6 +290,35 @@ switch (command) {
     }
 
     process.exit(auditReport.completeness.refused > 0 ? 1 : 0);
+    break;
+  }
+
+  case "drain": {
+    const clearance = flagValue("--clearance");
+    const cells = flagValue("--cells");
+    const infection = flagValue("--infection");
+    const copies = flagValue("--copies");
+    if (!clearance || !cells || !infection || !copies) usage();
+
+    const { modelDrain } = await import("./drain.ts");
+    const drainResult = modelDrain({
+      clearance_rate: parseFloat(clearance),
+      cell_count: parseInt(cells, 10),
+      infection_rate: parseFloat(infection),
+      copies_per_cell: parseInt(copies, 10),
+      rounds: parseInt(flagValue("--rounds") ?? "10", 10),
+      detection_limit: parseFloat(flagValue("--detection") ?? "1e-6"),
+      confidence: parseFloat(flagValue("--confidence") ?? "0.95"),
+    });
+
+    if (args.includes("--json")) {
+      const { report: _, ...data } = drainResult;
+      console.log(JSON.stringify(data, null, 2));
+    } else {
+      console.log(drainResult.report);
+    }
+
+    process.exit(drainResult.round_for_confidence !== null ? 0 : 1);
     break;
   }
 
