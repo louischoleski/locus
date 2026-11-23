@@ -1,0 +1,42 @@
+// HSV-2 latent reservoir elimination — strongest viable design.
+//
+// Strategy: close every open question the system raises.
+//
+// DESIGN DECISIONS:
+//
+// 1. DUAL GUIDE (`all`) — both cuts required for success.
+//    Single cuts produce indels; HSV can tolerate indels in non-essential
+//    regions. Dual cuts flanking a critical region produce deletion,
+//    which HSV cannot recover from. The `all` combinator forces this.
+//
+// 2. UNIQUE SEQUENCES — both guides return 0 hits in the reference genome.
+//    This enables the sequence_unique_in_host inference at (inferred, same).
+//
+// 3. EXHAUSTIVE RESIDENCE (`only`) with MEASURED grade.
+//    HSV-2 latency is in sacral DRG sensory neurons. This is measured in
+//    humans (Aubert et al. 2024, Ramchandani et al. 2019). The `only`
+//    claim is the strongest position for HSV-2 specifically (HSV-1 has
+//    trigeminal involvement, but HSV-2 is sacral-predominant).
+//
+// 4. TOLERANCE 0 — guides designed against conserved HSV-2 genomic regions.
+//
+// WHAT THE SYSTEM STILL NEEDS (via --facts):
+//   - Measured outcome distribution for this effector + guide pair + cell type
+//   - A supporting elimination fact from an in vivo or organoid study
+//
+// Without --facts: 3/4 assertions allowed, eliminates_reservoir REFUSED
+// With --facts:    4/4 assertions allowed, eliminates_reservoir ALLOWED
+//
+// Run:
+//   locus build examples/hsv2_viable.locus --genome fixtures/corpus/corpus_genome.fa
+//   locus build examples/hsv2_viable.locus --genome fixtures/corpus/corpus_genome.fa --facts examples/hsv2_viable_facts.json
+//   locus audit examples/hsv2_viable.locus --genome fixtures/corpus/corpus_genome.fa --facts examples/hsv2_viable_facts.json
+
+target HSV2Latent {
+  organism human
+  tolerance 0
+  signatures all [ AAACCCGGGTTTAAACCCGGGTTT, TTTGGGCCCAAATTTGGGCCCAAA ]
+  in only [ neuron.sensory.sacral ] @measured(human)
+}
+
+excise HSV2Latent
