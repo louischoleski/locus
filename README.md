@@ -127,6 +127,7 @@ The facts file can include external experimental results (e.g., from a reporter 
 | `locus check <file>` | Parse and static checks only | 0 ok, 2 error |
 | `locus why <assertion> <file> --genome <fasta>` | Explain why an assertion was allowed or refused | 0 allowed, 1 refused |
 | `locus audit <file> --genome <fasta>` | Evidence completeness, open questions, risk surface | 0 all allowed, 1 refusals |
+| `locus drain --clearance <rate> --cells <n> ...` | Model multi-round reservoir depletion | 0 converges, 1 insufficient |
 | `locus test <dir> --genome <fasta>` | Run corpus fixtures | 0 pass, 1 fixture fail, 2 unit fail |
 | `locus diff <dir> --genome-a <fa> --genome-b <fa>` | Compare assertion statuses across genomes | 0 no change, 1 needs reviewer |
 | `locus registry validate <header.json>` | Validate a registry header | 0 valid, 2 invalid |
@@ -195,8 +196,43 @@ locus build examples/hpv_cervical_cancer.locus --genome fixtures/corpus/corpus_g
 |---------|---------|
 | [Full elimination](examples/full_elimination.locus) | What all four conditions look like when met |
 | [Detection vector assay](examples/verification_assay.locus) | dCas9-VPR-GFP reporter to verify excision worked |
+| [Viable HSV-2 cure](examples/hsv2_viable.locus) | Strongest design: unique guides, measured residence, 75% completeness |
 
 The system converges with published reality in all three real cases. The virus-as-drug examples show how measured evidence converts a refusal into an allowance.
+
+## Draining a reservoir
+
+A single excision round can't guarantee 100% clearance. But repeated rounds drive the residual exponentially toward zero. `locus drain` models this:
+
+```
+$ locus drain --clearance 0.98 --cells 50000 --infection 0.30 --copies 10 --rounds 10
+
+RESERVOIR DRAIN MODEL
+
+  Parameters:
+    Clearance rate per round:  98.0%
+    Initial viral copies:      150,000
+
+  Round-by-round:
+    Round  Residual        Expected copies
+        0       100.0000%            150000.0
+        1         2.0000%              3000.0
+        2         0.0400%                60.0
+        3         8.00e-6                 1.2
+        4         1.60e-7                 0.0   ← expected copies < 1
+
+  CONCLUSION: 4 treatment rounds to reach 95% confidence
+  of complete reservoir elimination, given 98.0% clearance per round.
+```
+
+The question isn't "can we get to zero?" — it's "how many rounds?"
+
+| Clearance per round | Rounds to drain (95% confidence) |
+|---|---|
+| 90% | 7 rounds |
+| 95% | 5 rounds |
+| 98% | 4 rounds |
+| 99% | 3 rounds |
 
 ## Project structure
 
@@ -206,7 +242,7 @@ src/
   ir/          Two-axis grade algebra, fact graph types
   passes/      resolve (parse + vocab), scan (FASTA + k-mer index), judge (grade fold)
   registry/    Header validator, vocab resolver, organism relations, provenance, normalisation
-  cli/         build, check, why, audit, test, diff, init, diagnostics
+  cli/         build, check, why, audit, drain, test, diff, init, diagnostics
 
 registry/
   schema.json        Registry header JSON Schema
@@ -220,7 +256,7 @@ fixtures/
   corpus/            30 fixtures against 1MB synthetic genome
 
 examples/
-  8 worked examples (convergence, virus-as-drug, verification)
+  9 worked examples (convergence, virus-as-drug, verification, viable cure)
 ```
 
 ## Tests
